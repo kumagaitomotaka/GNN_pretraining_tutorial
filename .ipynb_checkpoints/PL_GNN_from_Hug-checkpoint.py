@@ -1,0 +1,134 @@
+import numpy as np
+import pandas as pd
+import csv
+import os
+from sklearn.metrics import r2_score, accuracy_score
+import torch
+from torch import nn
+import torch.multiprocessing as mp
+from torch_geometric.nn.model_hub import PyGModelHubMixin
+import pytorch_lightning as pl
+#自作モジュール
+from models.PL_BasicGNN_models import PL_BasicGNNs
+from models.PL_topK_model import PL_TopKmodel
+from models.PL_set2set_model import PL_Set2Setmodel
+from dataset.gnn_dataset import GNN_DatasetWrapper
+from pytorch_lightning.callbacks import ModelCheckpoint
+from callbacks.pl_callbacks import CSVLogger
+
+# Define your class with the mixin:
+class PL_Basic_GNN(PL_BasicGNNs, PyGModelHubMixin):
+    def __init__(self,model_name, dataset_name, model_kwargs):
+        model_kwargs['finetune_dim'] = 2
+        model_kwargs['task'] = 'classification'
+        model_kwargs['model_type'] = 'finetune'
+        PL_BasicGNNs.__init__(self,**model_kwargs)
+        PyGModelHubMixin.__init__(self, model_name,
+            dataset_name, model_kwargs)
+class PL_TopK_GNN(PL_TopKmodel, PyGModelHubMixin):
+    def __init__(self,model_name, dataset_name, model_kwargs):
+        model_kwargs['finetune_dim'] = 2
+        model_kwargs['task'] = 'classification'
+        model_kwargs['model_type'] = 'finetune'
+        PL_TopKmodel.__init__(self,**model_kwargs)
+        PyGModelHubMixin.__init__(self, model_name,
+            dataset_name, model_kwargs)
+class PL_Set2Set_GNN(PL_Set2Setmodel, PyGModelHubMixin):
+    def __init__(self,model_name, dataset_name, model_kwargs):
+        model_kwargs['finetune_dim'] = 2
+        model_kwargs['task'] = 'classification'
+        model_kwargs['model_type'] = 'finetune'
+        PL_Set2Setmodel.__init__(self,**model_kwargs)
+        PyGModelHubMixin.__init__(self, model_name,
+            dataset_name, model_kwargs)
+        
+def main():
+    epochs = 200            #number of train epoch
+    batch_size = 128
+    num_workers = 10                # dataloader number of workers
+    valid_size = 0.1               # ratio of validation data
+    test_size = 0.1                # ratio of test data
+    splitting = 'random'          # data splitting (i.e., random/scaffold)
+    random_seed = None
+    data_name = 'Ames'
+    finetune_dim = 1
+    model_name = 'GCN'
+    repo_id = "kumatomo/BasicGCN" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN
+    task = 'classification'
+    model_type = 'finetune'
+    
+    #dataset
+    dataset = GNN_DatasetWrapper(batch_size, num_workers, valid_size, test_size, data_name, splitting, random_seed=random_seed)
+    train_loader, valid_loader, test_loader = dataset.get_data_loaders()
+
+    #nomalizer
+    norm = False
+    if task == 'regression':
+        labels = []
+        for d in train_loader:
+            labels.extend(d.y)
+        mean_value = np.mean(labels)
+        std_value = np.std(labels)
+        print('normalizing...mean: {}, std: {}, shape: {}'.format(mean_value,std_value, len(labels)))
+        norm = True
+    else:
+        normalizer = None
+        print('No normalizing.')
+    
+    # 保存するCSVファイルのパスとフィールド名を指定
+    data_dir = 'Hug_PL_data_finetune'
+    os.makedirs(data_dir, exist_ok=True)
+    log_dir = os.path.join(data_dir, 'QM9_'+model_name+ '_' +data_name)
+    os.makedirs(log_dir, exist_ok=True)
+    log_file = 'logs.csv'
+    log_file_path= os.path.join(log_dir, log_file)
+    csv_logger = CSVLogger(file_path=log_file_path, fieldnames=['epoch', 'train_loss', 'val_loss'])
+    
+    #modelを保存するmodelcheckpointの作成
+    state_save_dir ='pl_finetune_ckpt/'
+    if task == 'classification':
+        checkpoint_callback = ModelCheckpoint(monitor='val_loss',dirpath=state_save_dir, filename=data_name + '_' + model_name +'_model-{epoch:02d}', save_top_k=1, mode='max')# 最良のモデル1つだけ保存
+    elif task == 'regression':
+        checkpoint_callback = ModelCheckpoint(monitor='val_loss',dirpath=state_save_dir, filename=data_name + '_' + model_name +'_model-{epoch:02d}', save_top_k=1, mode='min')# 最良のモデル1つだけ保存
+        
+    #get num_feature
+    check_iter = iter(train_loader)
+    check_data = next(check_iter)
+    num_atom_features = int(check_data[0].num_atom_features)
+    num_bond_features = int(check_data[0].num_bond_features)
+    
+    if model_name == 'GCN' or  model_name == 'GIN':
+        pl_gnn = PL_Basic_GNN(model_name=model_name, dataset_name='QM9',model_kwargs=dict(model_name=model_name, task=task, model_type=model_type, in_channels=num_atom_features, finetune_dim=finetune_dim))
+    elif model_name == 'TopK':
+        pl_gnn = PL_TopK_GNN(model_name=model_name, dataset_name='QM9',model_kwargs=dict(task=task, model_type=model_type, num_atom_features=num_atom_features, finetune_dim=finetune_dim))
+    elif model_name == 'set2set':
+        pl_gnn = PL_Set2Set_GNN(model_name=model_name, dataset_name='QM9',model_kwargs=dict(task=task, model_type=model_type, num_atom_features=num_atom_features, num_bond_features=num_bond_features, finetune_dim=finetune_dim))
+    #pretraine済みモデルの読み込み
+    pl_model = pl_gnn.from_pretrained(repo_id,model_name=model_name,dataset_name='QM9')
+    #平均と分散の追加
+    if norm:
+        pl_model.norm = True
+        pl_model.mean = mean_value
+        pl_model.std = std_value
+    else:
+        pl_model.norm = False
+    trainer = pl.Trainer(callbacks=[csv_logger, checkpoint_callback], max_epochs=epochs, log_every_n_steps=1, devices=1, num_nodes=1)
+    trainer.fit(pl_model, train_loader, valid_loader)
+    train_loss = pl_model.train_loss
+    val_loss = pl_model.val_loss
+    trainer.test(ckpt_path='best', dataloaders=test_loader) 
+    #print(trainer.callback_metrics)
+    preds, labels = pl_model.test_step_outputs
+    if task == 'classification':
+        predicted = np.argmax(preds, axis=1)
+        print('Accuracy', accuracy_score(labels, predicted))
+    elif task == 'regression':
+        print('R2: ', r2_score(labels, preds))
+    p_l_file = os.path.join(log_dir, 'PandL')
+    np.savez(p_l_file, pred=preds,labels=labels)
+
+if __name__ == "__main__":
+    mp.set_sharing_strategy('file_system')
+    
+    main()
+

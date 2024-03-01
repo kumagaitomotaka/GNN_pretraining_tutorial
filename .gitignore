@@ -1,0 +1,10 @@
+data/
+Hug_PL_data/
+Hug_PL_data_finetune/
+lightning_logs/
+pl_finetune_ckpt/
+pl_pretrain_ckpt/
+pretrain_models/
+Dopython.ipynb
+evaluation.ipynb
+ForGit.ipynb

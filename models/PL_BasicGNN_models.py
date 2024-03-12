@@ -4,7 +4,7 @@ from torch.nn import Sequential, ReLU, GRU, Linear, Dropout
 from torch_geometric.nn import NNConv, Set2Set
 import pytorch_lightning as pl
 from torchmetrics.regression import R2Score
-from torch_geometric.nn.models import GCN,GIN
+from torch_geometric.nn.models import GCN,GIN,GraphSAGE
 import models.utils_for_models as utils
 
 
@@ -36,6 +36,8 @@ class PL_BasicGNNs(pl.LightningModule):
             self.model=GCN(in_channels=in_channels, hidden_channels=hidden_channels, num_layers=num_layers, out_channels=out_channels, dropout=dropout)
         elif model_name == 'GIN':
             self.model=GIN(in_channels=in_channels, hidden_channels=hidden_channels, num_layers=num_layers, out_channels=out_channels, dropout=dropout)
+        elif model_name == 'GraphSAGE':
+            self.model=GraphSAGE(in_channels=in_channels, hidden_channels=hidden_channels, num_layers=num_layers, out_channels=out_channels, dropout=dropout)
             
         self.set2set = Set2Set(out_channels, processing_steps=3)
         self.lin1 = Linear(2 * out_channels, out_channels)

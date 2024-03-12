@@ -19,24 +19,24 @@ from callbacks.pl_callbacks import CSVLogger
 # Define your class with the mixin:
 class PL_Basic_GNN(PL_BasicGNNs, PyGModelHubMixin):
     def __init__(self,model_name, dataset_name, model_kwargs):
-        model_kwargs['finetune_dim'] = 2
-        model_kwargs['task'] = 'classification'
+        model_kwargs['finetune_dim'] = 1
+        model_kwargs['task'] = 'regression'
         model_kwargs['model_type'] = 'finetune'
         PL_BasicGNNs.__init__(self,**model_kwargs)
         PyGModelHubMixin.__init__(self, model_name,
             dataset_name, model_kwargs)
 class PL_TopK_GNN(PL_TopKmodel, PyGModelHubMixin):
     def __init__(self,model_name, dataset_name, model_kwargs):
-        model_kwargs['finetune_dim'] = 2
-        model_kwargs['task'] = 'classification'
+        model_kwargs['finetune_dim'] = 1
+        model_kwargs['task'] = 'regression'
         model_kwargs['model_type'] = 'finetune'
         PL_TopKmodel.__init__(self,**model_kwargs)
         PyGModelHubMixin.__init__(self, model_name,
             dataset_name, model_kwargs)
 class PL_Set2Set_GNN(PL_Set2Setmodel, PyGModelHubMixin):
     def __init__(self,model_name, dataset_name, model_kwargs):
-        model_kwargs['finetune_dim'] = 2
-        model_kwargs['task'] = 'classification'
+        model_kwargs['finetune_dim'] = 1
+        model_kwargs['task'] = 'regression'
         model_kwargs['model_type'] = 'finetune'
         PL_Set2Setmodel.__init__(self,**model_kwargs)
         PyGModelHubMixin.__init__(self, model_name,
@@ -50,12 +50,14 @@ def main():
     test_size = 0.1                # ratio of test data
     splitting = 'random'          # data splitting (i.e., random/scaffold)
     random_seed = None
-    data_name = 'Ames'
+    data_name = 'Sol_rgr'
     finetune_dim = 1
-    model_name = 'GCN'
-    repo_id = "kumatomo/BasicGCN" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN
-    task = 'classification'
+    model_name = 'GraphSAGE'
+    repo_id = "kumatomo/BasicGraphSAGE" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN, kumatomo/BasicGIN
+    task = 'regression'
     model_type = 'finetune'
+    
+    print('{} model start with {}, {} predicting'.format(model_type, model_name, data_name))
     
     #dataset
     dataset = GNN_DatasetWrapper(batch_size, num_workers, valid_size, test_size, data_name, splitting, random_seed=random_seed)
@@ -97,12 +99,14 @@ def main():
     num_atom_features = int(check_data[0].num_atom_features)
     num_bond_features = int(check_data[0].num_bond_features)
     
-    if model_name == 'GCN' or  model_name == 'GIN':
+    if model_name in['GCN','GIN','GraphSAGE']:
         pl_gnn = PL_Basic_GNN(model_name=model_name, dataset_name='QM9',model_kwargs=dict(model_name=model_name, task=task, model_type=model_type, in_channels=num_atom_features, finetune_dim=finetune_dim))
     elif model_name == 'TopK':
         pl_gnn = PL_TopK_GNN(model_name=model_name, dataset_name='QM9',model_kwargs=dict(task=task, model_type=model_type, num_atom_features=num_atom_features, finetune_dim=finetune_dim))
     elif model_name == 'set2set':
         pl_gnn = PL_Set2Set_GNN(model_name=model_name, dataset_name='QM9',model_kwargs=dict(task=task, model_type=model_type, num_atom_features=num_atom_features, num_bond_features=num_bond_features, finetune_dim=finetune_dim))
+    else:
+        raise ValueError('{} model was not supported'.format(model_name))
     #pretraine済みモデルの読み込み
     pl_model = pl_gnn.from_pretrained(repo_id,model_name=model_name,dataset_name='QM9')
     #平均と分散の追加

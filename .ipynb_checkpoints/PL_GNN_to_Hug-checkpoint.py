@@ -42,8 +42,8 @@ def main():
     splitting = 'random'          # data splitting (i.e., random/scaffold)
     data_name = 'QM9'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model_name= 'GIN'
-    repo_id = "kumatomo/BasicGIN" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN
+    model_name= 'GraphSAGE'
+    repo_id = "kumatomo/BasicGraphSAGE" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN, kumatomo/BasicGIN
     task = 'regression'
     model_type = 'pretrain'
     finetune_dim = 0
@@ -95,7 +95,7 @@ def main():
     num_atom_features = int(check_data[0].num_atom_features)
     num_bond_features = int(check_data[0].num_bond_features)
     
-    if model_name == 'GCN' or  model_name == 'GIN':
+    if model_name in ['GCN', 'GIN', 'GraphSAGE']:
         pl_model = PL_Basic_GNN(model_name=model_name, dataset_name='QM9',model_kwargs=dict(model_name=model_name, task=task, model_type=model_type, in_channels=num_atom_features, finetune_dim=finetune_dim))
     elif model_name == 'TopK':
         pl_model = PL_TopK_GNN(model_name=model_name, dataset_name='QM9',model_kwargs=dict(task=task, model_type=model_type, num_atom_features=num_atom_features, finetune_dim=finetune_dim))

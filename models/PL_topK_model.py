@@ -6,7 +6,7 @@ from torch_geometric.nn import global_max_pool as gmp
 from torch_geometric.nn import global_mean_pool as gap
 import pytorch_lightning as pl
 from torchmetrics.regression import R2Score
-import models.utils_for_models as utils
+import utils_for_models as utils
 
 
 #https://github.com/pyg-team/pytorch_geometric/blob/master/examples/proteins_topk_pool.py

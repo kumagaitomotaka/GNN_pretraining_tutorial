@@ -5,7 +5,8 @@ from torch_geometric.nn import NNConv, Set2Set
 import pytorch_lightning as pl
 from torchmetrics.regression import R2Score
 from torch_geometric.nn.models import GCN,GIN,GraphSAGE
-import utils_for_models as utils
+#import utils_for_models as utils
+import models.utils_for_models as utils
 
 
 

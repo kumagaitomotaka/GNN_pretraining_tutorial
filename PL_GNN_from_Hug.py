@@ -43,18 +43,18 @@ class PL_Set2Set_GNN(PL_Set2Setmodel, PyGModelHubMixin):
             dataset_name, model_kwargs)
         
 def main():
-    epochs = 200            #number of train epoch
+    epochs = 300            #number of train epoch
     batch_size = 128
     num_workers = 10                # dataloader number of workers
     valid_size = 0.1               # ratio of validation data
     test_size = 0.1                # ratio of test data
     splitting = 'random'          # data splitting (i.e., random/scaffold)
     random_seed = None
-    data_name = 'Sol_rgr'
+    data_name = 'Ames'
     finetune_dim = 1
-    model_name = 'GraphSAGE'
-    repo_id = "kumatomo/BasicGraphSAGE" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN, kumatomo/BasicGIN
-    task = 'regression'
+    model_name = 'GIN'
+    repo_id = "kumatomo/BasicGIN" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN, kumatomo/BasicGIN
+    task = 'classification'
     model_type = 'finetune'
     
     print('{} model start with {}, {} predicting'.format(model_type, model_name, data_name))
@@ -80,7 +80,7 @@ def main():
     # 保存するCSVファイルのパスとフィールド名を指定
     data_dir = 'Hug_PL_data_finetune'
     os.makedirs(data_dir, exist_ok=True)
-    log_dir = os.path.join(data_dir, 'QM9_'+model_name+ '_' +data_name)
+    log_dir = os.path.join(data_dir, 'new_QM9_'+model_name+ '_' +data_name)
     os.makedirs(log_dir, exist_ok=True)
     log_file = 'logs.csv'
     log_file_path= os.path.join(log_dir, log_file)
@@ -116,6 +116,7 @@ def main():
         pl_model.std = std_value
     else:
         pl_model.norm = False
+    pl_model.train()
     trainer = pl.Trainer(callbacks=[csv_logger, checkpoint_callback], max_epochs=epochs, log_every_n_steps=1, devices=1, num_nodes=1)
     trainer.fit(pl_model, train_loader, valid_loader)
     train_loss = pl_model.train_loss

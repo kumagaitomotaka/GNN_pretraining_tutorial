@@ -4,7 +4,8 @@ from torch.nn import Sequential, ReLU, GRU, Linear, Dropout
 from torch_geometric.nn import NNConv, Set2Set
 import pytorch_lightning as pl
 from torchmetrics.regression import R2Score
-import utils_for_models as utils
+#import utils_for_models as utils
+import models.utils_for_models as utils
 
 
 #https://github.com/pyg-team/pytorch_geometric/blob/master/examples/proteins_topk_pool.py
@@ -214,7 +215,7 @@ class PL_Set2Setmodel(pl.LightningModule):
         return {
         "optimizer": optimizer,
         "lr_scheduler": {
-            "scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.7, patience=5, min_lr=1e-7),
+            "scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.7, patience=5, min_lr=1e-5),
             "monitor": 'val_loss'},
                 }
     

@@ -1,6 +1,4 @@
 import numpy as np
-import pandas as pd
-import csv
 import os
 from sklearn.metrics import r2_score, accuracy_score
 import torch
@@ -18,24 +16,27 @@ from callbacks.pl_callbacks import CSVLogger
 # Define your class with the mixin:
 class PL_Basic_GNN(PL_BasicGNNs, PyGModelHubMixin):
     def __init__(self,model_name, dataset_name, model_kwargs):
-        model_kwargs['finetune_dim'] = 1
-        model_kwargs['task'] = 'regression'
+        #正常に読み込まれないため再定義
+        model_kwargs['finetune_dim'] = 2 
+        model_kwargs['task'] = 'classification'
         model_kwargs['model_type'] = 'finetune'
         PL_BasicGNNs.__init__(self,**model_kwargs)
         PyGModelHubMixin.__init__(self, model_name,
             dataset_name, model_kwargs)
 class PL_TopK_GNN(PL_TopKmodel, PyGModelHubMixin):
     def __init__(self,model_name, dataset_name, model_kwargs):
-        model_kwargs['finetune_dim'] = 1
-        model_kwargs['task'] = 'regression'
+        #正常に読み込まれないため再定義
+        model_kwargs['finetune_dim'] = 2
+        model_kwargs['task'] = 'classification'
         model_kwargs['model_type'] = 'finetune'
         PL_TopKmodel.__init__(self,**model_kwargs)
         PyGModelHubMixin.__init__(self, model_name,
             dataset_name, model_kwargs)
 class PL_Set2Set_GNN(PL_Set2Setmodel, PyGModelHubMixin):
     def __init__(self,model_name, dataset_name, model_kwargs):
-        model_kwargs['finetune_dim'] = 1
-        model_kwargs['task'] = 'regression'
+        #正常に読み込まれないため再定義
+        model_kwargs['finetune_dim'] = 2
+        model_kwargs['task'] = 'classification'
         model_kwargs['model_type'] = 'finetune'
         PL_Set2Setmodel.__init__(self,**model_kwargs)
         PyGModelHubMixin.__init__(self, model_name,

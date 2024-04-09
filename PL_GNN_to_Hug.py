@@ -43,7 +43,7 @@ def main():
     data_name = 'QM9'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model_name= 'GraphSAGE'
-    repo_id = "kumatomo/BasicGraphSAGE" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN, kumatomo/BasicGIN
+    repo_id = "kumatomo/BasicGraphSAGE" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN, kumatomo/BasicGIN, kumatomo/BasicGraphSAGE
     task = 'regression'
     model_type = 'pretrain'
     finetune_dim = 0
@@ -118,7 +118,7 @@ def main():
         state_save_dir, #wightの保存先
         push_to_hub=True,
         repo_id=repo_id,
-        token = my_token
+        token=my_token
      )
     print('Pushing to the HuggingFace was Done!')
     

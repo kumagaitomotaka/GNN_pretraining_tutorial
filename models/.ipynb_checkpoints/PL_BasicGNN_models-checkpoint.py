@@ -200,13 +200,16 @@ class PL_BasicGNNs(pl.LightningModule):
 
     
     def configure_optimizers(self):
-        #https://lightning.ai/docs/pytorch/stable/api/lightning.pytorch.core.LightningModule.html#lightning.pytorch.core.LightningModule.configure_optimizers
-        optimizer = torch.optim.Adam(self.parameters(), lr=1e-4)
+        params = list(map(lambda x: x[1],list(filter(lambda kv: kv[0] in layer_list, self.named_parameters()))))
+        base_params = list(map(lambda x: x[1],list(filter(lambda kv: kv[0] not in layer_list, self.named_parameters()))))
+
+        optimizer = torch.optim.Adam(
+            [{'params': base_params, 'lr': 0.0001}, {'params': params}],0.005)
 
         return {
         "optimizer": optimizer,
         "lr_scheduler": {
-            "scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.7, patience=5, min_lr=1e-7),
+            "scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min',factor=0.7, patience=5,min_lr=1e-5),
             "monitor": 'val_loss'},
                 }
     

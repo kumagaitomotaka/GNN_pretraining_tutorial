@@ -200,11 +200,7 @@ class PL_BasicGNNs(pl.LightningModule):
 
     
     def configure_optimizers(self):
-        params = list(map(lambda x: x[1],list(filter(lambda kv: kv[0] in layer_list, self.named_parameters()))))
-        base_params = list(map(lambda x: x[1],list(filter(lambda kv: kv[0] not in layer_list, self.named_parameters()))))
-
-        optimizer = torch.optim.Adam(
-            [{'params': base_params, 'lr': 0.0001}, {'params': params}],0.005)
+        optimizer = torch.optim.Adam(self.parameters(), lr=0.001)
 
         return {
         "optimizer": optimizer,

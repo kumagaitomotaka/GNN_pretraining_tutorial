@@ -1,6 +1,7 @@
 import torch
 
 def r_squared(y_true, y_pred):
+    y_pred = torch.squeeze(y_pred)
     y_mean = torch.mean(y_true)
     tss = torch.sum((y_true - y_mean)**2)
     rss = torch.sum((y_true - y_pred)**2)

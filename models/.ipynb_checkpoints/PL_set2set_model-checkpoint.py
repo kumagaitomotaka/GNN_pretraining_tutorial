@@ -4,7 +4,6 @@ from torch.nn import Sequential, ReLU, GRU, Linear, Dropout
 from torch_geometric.nn import NNConv, Set2Set
 import pytorch_lightning as pl
 from torchmetrics.regression import R2Score
-#import utils_for_models as utils
 import models.utils_for_models as utils
 
 
@@ -190,7 +189,7 @@ class PL_Set2Setmodel(pl.LightningModule):
             self.log('test_end_lumo r2:', r2_l.item())
             self.log('test_end_R2:', r2_all.item())
         elif self.model_type == 'finetune':
-            test_end_pred = torch.stack(self.test_step_preds)
+            test_end_pred = torch.cat(self.test_step_preds)
             test_end_label = torch.stack(self.test_step_labels)
             print('\nend_test_pred: {}'.format(len(test_end_pred)))
             # 結果の評価

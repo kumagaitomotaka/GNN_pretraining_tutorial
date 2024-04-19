@@ -182,7 +182,7 @@ class PL_BasicGNNs(pl.LightningModule):
             self.log('test_end_lumo r2:', r2_l.item())
             self.log('test_end_R2:', r2_all.item())
         elif self.model_type == 'finetune':
-            test_end_pred = torch.stack(self.test_step_preds)
+            test_end_pred = torch.cat(self.test_step_preds)
             test_end_label = torch.stack(self.test_step_labels)
             print('\nend_test_pred: {}'.format(len(test_end_pred)))
             # 結果の評価

@@ -51,9 +51,9 @@ def main():
     splitting = 'random'          # data splitting (i.e., random/scaffold)
     random_seed = None
     data_name = 'Ames'
-    finetune_dim = 1
-    model_name = 'GIN'
-    repo_id = "kumatomo/BasicGIN" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN, kumatomo/BasicGIN
+    finetune_dim = 2
+    model_name = 'set2set'
+    repo_id = "kumatomo/set2set_GNN" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN, kumatomo/BasicGIN
     task = 'classification'
     model_type = 'finetune'
     
@@ -88,10 +88,7 @@ def main():
     
     #modelを保存するmodelcheckpointの作成
     state_save_dir ='pl_finetune_ckpt/'
-    if task == 'classification':
-        checkpoint_callback = ModelCheckpoint(monitor='val_loss',dirpath=state_save_dir, filename=data_name + '_' + model_name +'_model-{epoch:02d}', save_top_k=1, mode='max')# 最良のモデル1つだけ保存
-    elif task == 'regression':
-        checkpoint_callback = ModelCheckpoint(monitor='val_loss',dirpath=state_save_dir, filename=data_name + '_' + model_name +'_model-{epoch:02d}', save_top_k=1, mode='min')# 最良のモデル1つだけ保存
+    checkpoint_callback = ModelCheckpoint(monitor='val_loss',dirpath=state_save_dir, filename=data_name + '_' + model_name +'_model-{epoch:02d}', save_top_k=1, mode='min')# 最良のモデル1つだけ保存
         
     #get num_feature
     check_iter = iter(train_loader)
@@ -117,7 +114,7 @@ def main():
     else:
         pl_model.norm = False
     pl_model.train()
-    trainer = pl.Trainer(callbacks=[csv_logger, checkpoint_callback], max_epochs=epochs, log_every_n_steps=1, devices=1, num_nodes=1)
+    trainer = pl.Trainer(callbacks=[csv_logger, checkpoint_callback], max_epochs=epochs, log_every_n_steps=1, devices=1)#devices=1を指定しないとregressionの際にRuntimeErrorがでる
     trainer.fit(pl_model, train_loader, valid_loader)
     train_loss = pl_model.train_loss
     val_loss = pl_model.val_loss

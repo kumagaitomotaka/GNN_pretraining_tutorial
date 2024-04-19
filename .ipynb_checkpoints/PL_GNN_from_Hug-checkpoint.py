@@ -52,8 +52,8 @@ def main():
     random_seed = None
     data_name = 'Ames'
     finetune_dim = 2
-    model_name = 'set2set'
-    repo_id = "kumatomo/set2set_GNN" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN, kumatomo/BasicGIN
+    model_name = 'TopK'
+    repo_id = "kumatomo/TopK_GNN" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN, kumatomo/BasicGIN
     task = 'classification'
     model_type = 'finetune'
     
@@ -80,7 +80,7 @@ def main():
     # 保存するCSVファイルのパスとフィールド名を指定
     data_dir = 'Hug_PL_data_finetune'
     os.makedirs(data_dir, exist_ok=True)
-    log_dir = os.path.join(data_dir, 'new_QM9_'+model_name+ '_' +data_name)
+    log_dir = os.path.join(data_dir, 'test_QM9_'+model_name+ '_' +data_name)
     os.makedirs(log_dir, exist_ok=True)
     log_file = 'logs.csv'
     log_file_path= os.path.join(log_dir, log_file)

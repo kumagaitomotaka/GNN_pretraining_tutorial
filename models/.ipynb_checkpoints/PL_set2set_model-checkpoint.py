@@ -198,7 +198,7 @@ class PL_Set2Setmodel(pl.LightningModule):
                 results = {'R2': r2}
                 self.log('test_end_R2:', r2.item())
             elif self.task == 'classification':
-                acc = utils.accuracy(test_end_label, F.softmax(test_end_pred, dim=-1))
+                acc = utils.accuracy(test_end_label, test_end_pred)
                 results = {'Accuracy': acc}
                 self.log('test_end_Acc:', acc)
             self.test_step_outputs = (test_end_pred.cpu().detach().numpy(),test_end_label.cpu().detach().numpy())

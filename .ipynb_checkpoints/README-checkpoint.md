@@ -1,10 +1,1 @@
-data/
-Hug_PL_data/
-Hug_PL_data_finetune/
-lightning_logs/
-pl_finetune_ckpt/
-pl_pretrain_ckpt/
-pretrain_models/
-Dopython.ipynb
-evaluation.ipynb
-ForGit.ipynb
+https://img.shields.io/badge/cuda-11.8-blue.svg https://img.shields.io/badge/python-3.8-yellow.svg https://img.shields.io/badge/pytorch-2.1.0-red.svg https://img.shields.io/badge/PyG-2.4.0-orange.svg 

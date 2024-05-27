@@ -37,7 +37,7 @@ QM9データセットおよびAmes試験データ、水溶性に関するデー�
 ```
 $ python PL_GNN_to_Hug.py
 ```
-#### ※注意点
+#### ※注意
 PL_GNN_to_Hug.py内20,21行目に自身のHugging Faceのアクセストークン及び自身のrepo_idを入力してから実行してください。
 ```
 20 my_token = '*************************************' #自身のトークンを入力してください。
@@ -48,7 +48,7 @@ PL_GNN_to_Hug.py内20,21行目に自身のHugging Faceのアクセストーク�
 ```
 $ python PL_GNN_from_Hug.py
 ```
-#### ※注意点
+#### ※注意
 ファインチューニングを行うデータセットに合わせてdata_nameやmodel_kwagsなどを適切に変更してから実行してください。
 ```
 model_kwargs['finetune_dim'] = 2 

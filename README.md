@@ -8,8 +8,11 @@
 次に、Hugging Faceに保存されている事前学習モデルを読み込み、ファインチューニングおよび物性予測を行います(ファインチューニング)。
 事前学習に用いたQM9のデータは[こちら](https://github.com/yuyangw/MolCLR, 'https://github.com/yuyangw/MolCLR')からダウンロードしました。
 ファインチューニング用のデータは[Ames試験データ](https://pubs.acs.org/doi/abs/10.1021/ci900161g)と[水溶性に関するデータ](https://github.com/rdkit/rdkit/tree/master/Docs/Book/data)を用いました。
-ファインチューニングについては[Google colablatory](https://colab.research.google.com/drive/1rUaXXIKZaG6C9NTSwlUGTwcEBSB-Q_dK?usp=sharing)でも公開しています。
-[こちら]()のQiita記事も参考にしてください。
+ファインチューニングについてはGoogle colablatoryでも公開しています。
+内容の詳細についてはのQiita記事も参考にしてください。
+
+・[Google colablatory](https://colab.research.google.com/drive/1rUaXXIKZaG6C9NTSwlUGTwcEBSB-Q_dK?usp=sharing)
+・[Qiita記事]()
 
 ## インストール
 ```
@@ -32,12 +35,31 @@ QM9データセットおよびAmes試験データ、水溶性に関するデー�
 ### 事前学習
 事前学習を行うためには以下のコードを実行してください。
 ```
-
+$ python PL_GNN_to_Hug.py
 ```
 #### ※注意点
-
+PL_GNN_to_Hug.py内20,21行目に自身のHugging Faceのアクセストークン及び自身のrepo_idを入力してから実行してください。
+```
+20 my_token = '*************************************' #自身のトークンを入力してください。
+21 repo_id = "kumatomo/TopK_GNN" #自身で作成したレポジトリのrepo_idに変更してください。
+```
 ### ファインチューニング
 ファインチューニングを行う場合は以下のコードを実行してください。
 ```
-
+$ python PL_GNN_from_Hug.py
+```
+#### ※注意点
+ファインチューニングを行うデータセットに合わせてdata_nameやmodel_kwagsなどを適切に変更してから実行してください。
+```
+model_kwargs['finetune_dim'] = 2 
+model_kwargs['task'] = 'classification'
+model_kwargs['model_type'] = 'finetune'
+・
+・
+・
+data_name = 'Ames'
+finetune_dim = 2
+model_name = 'TopK'
+task = 'classification'
+model_type = 'finetune'
 ```

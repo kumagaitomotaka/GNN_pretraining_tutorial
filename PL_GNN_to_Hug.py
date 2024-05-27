@@ -17,6 +17,9 @@ from torch_geometric.nn.model_hub import PyGModelHubMixin
 from callbacks.pl_callbacks import CSVLogger
 from torch_geometric.utils import scatter #デバック
 
+my_token = '*************************************' #自身のトークンを入力してください。
+repo_id = "kumatomo/TopK_GNN" #自身で作成したレポジトリのrepo_idに変更してください。
+
 # Define your class with the mixin:
 class PL_Basic_GNN(PL_BasicGNNs, PyGModelHubMixin):
     def __init__(self,model_name, dataset_name, model_kwargs):
@@ -42,8 +45,7 @@ def main():
     splitting = 'random'          # data splitting (i.e., random/scaffold)
     data_name = 'QM9'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model_name= 'GraphSAGE'
-    repo_id = "kumatomo/BasicGraphSAGE" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN, kumatomo/BasicGIN, kumatomo/BasicGraphSAGE
+    model_name= 'TopK_GNN'
     task = 'regression'
     model_type = 'pretrain'
     finetune_dim = 0
@@ -112,7 +114,6 @@ def main():
     trainer.fit(pl_model, train_loader, valid_loader)
 
     # Push to the HuggingFace hub:
-    my_token = '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'
     print('Save this file: {}'.format(state_save_dir))
     pl_model.save_pretrained(
         state_save_dir, #wightの保存先

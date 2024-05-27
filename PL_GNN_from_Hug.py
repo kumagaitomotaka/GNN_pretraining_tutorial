@@ -13,6 +13,8 @@ from dataset.gnn_dataset import GNN_DatasetWrapper
 from pytorch_lightning.callbacks import ModelCheckpoint
 from callbacks.pl_callbacks import CSVLogger
 
+repo_id = "kumatomo/TopK_GNN" # 自身で事前学習モデルを作成した場合は、モデルを保存したrepo_idに変更してください。
+
 # Define your class with the mixin:
 class PL_Basic_GNN(PL_BasicGNNs, PyGModelHubMixin):
     def __init__(self,model_name, dataset_name, model_kwargs):
@@ -53,7 +55,6 @@ def main():
     data_name = 'Ames'
     finetune_dim = 2
     model_name = 'TopK'
-    repo_id = "kumatomo/TopK_GNN" # your repo id: kumatomo/TopK_GNN, kumatomo/set2set_GNN, kumatomo/BasicGCN, kumatomo/BasicGIN
     task = 'classification'
     model_type = 'finetune'
     

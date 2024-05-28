@@ -24,14 +24,13 @@ $ conda activate py38
 $ conda install -c "nvidia/label/cuda-11.8.0" cuda-toolki
 $ conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 $ conda install pyg -c pyg
-$ rdkit: conda install -c conda-forge rdkit
+$ conda install -c conda-forge rdkit
 $ pip install --upgrade huggingface_hub
 $ pip install pytorch_lightning
 ```
 ## 使い方
 ### データの準備
-QM9データセットおよびAmes試験データ、水溶性に関するデータはすべて必要な形にまとめられcsv形式で[data](https://github.com/kumagaitomotaka/Pretrain_models/tree/main/data)にまとめられています。
-必要に応じてダウンロードして使用してください。
+QM9データセットおよびAmes試験データ、水溶性に関するデータはすべて前処理済みのものをcsv形式で[data](https://github.com/kumagaitomotaka/Pretrain_models/tree/main/data)にまとめています。
 ### 事前学習
 事前学習を行うためには以下のコードを実行してください。
 ```
@@ -49,7 +48,7 @@ PL_GNN_to_Hug.py内20,21行目に自身のHugging Faceのアクセストーク�
 $ python PL_GNN_from_Hug.py
 ```
 #### ※注意
-ファインチューニングを行うデータセットに合わせてdata_nameやmodel_kwagsなどを適切に変更してから実行してください。
+ファインチューニングを行うデータセットに合わせてPL_GNN_from_Hug.py内のdata_nameやmodel_kwagsなどを適切に変更してから実行してください。
 ```
 model_kwargs['finetune_dim'] = 2 
 model_kwargs['task'] = 'classification'

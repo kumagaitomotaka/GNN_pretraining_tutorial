@@ -17,8 +17,8 @@ from torch_geometric.nn.model_hub import PyGModelHubMixin
 from callbacks.pl_callbacks import CSVLogger
 from torch_geometric.utils import scatter #デバック
 
-my_token = '*************************************' #自身のトークンを入力してください。
-repo_id = "kumatomo/TopK_GNN" #自身で作成したレポジトリのrepo_idに変更してください。
+my_token = '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' #自身のトークンを入力してください。
+repo_id = "kumatomo/GNN_test" #自身で作成したレポジトリのrepo_idに変更してください。
 
 # Define your class with the mixin:
 class PL_Basic_GNN(PL_BasicGNNs, PyGModelHubMixin):
@@ -38,6 +38,7 @@ class PL_Set2Set_GNN(PL_Set2Setmodel, PyGModelHubMixin):
             dataset_name, model_kwargs)
         
 def main():
+    max_epochs = 10
     batch_size = 512
     num_workers = 18                # dataloader number of workers
     valid_size = 0.1               # ratio of validation data
@@ -45,7 +46,7 @@ def main():
     splitting = 'random'          # data splitting (i.e., random/scaffold)
     data_name = 'QM9'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model_name= 'TopK_GNN'
+    model_name= 'TopK'
     task = 'regression'
     model_type = 'pretrain'
     finetune_dim = 0
@@ -110,7 +111,7 @@ def main():
     pl_model.mean_l = mean_value_l
     pl_model.std_h = std_value_h
     pl_model.std_l = std_value_l
-    trainer = pl.Trainer(callbacks=[csv_logger,checkpoint_callback], max_epochs=200, log_every_n_steps=1, devices=1, num_nodes=1)
+    trainer = pl.Trainer(callbacks=[csv_logger,checkpoint_callback], max_epochs=max_epochs, log_every_n_steps=1, devices=1, num_nodes=1)
     trainer.fit(pl_model, train_loader, valid_loader)
 
     # Push to the HuggingFace hub:

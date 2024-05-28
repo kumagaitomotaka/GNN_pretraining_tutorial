@@ -23,8 +23,8 @@ $ conda activate py38
 #必要な物のインストール
 $ conda install -c "nvidia/label/cuda-11.8.0" cuda-toolki
 $ conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
-$ conda install pyg -c pyg
 $ conda install -c conda-forge rdkit
+$ pip install torch_geometric
 $ pip install --upgrade huggingface_hub
 $ pip install pytorch_lightning
 ```
@@ -42,6 +42,8 @@ PL_GNN_to_Hug.py内20,21行目に自身のHugging Faceのアクセストーク�
 20 my_token = '*************************************' #自身のトークンを入力してください。
 21 repo_id = "kumatomo/TopK_GNN" #自身で作成したレポジトリのrepo_idに変更してください。
 ```
+modelはGCN、GIN、TopK_GCN、set2set_NMP、GraphSAGEの5種類が用意してあります。
+それらを用いる際にはmodel_nameにそれぞれ'GCN'、'GIN'、'TopK'、'set2set'、'GraphSAGE'を入力してください。
 ### ファインチューニング
 ファインチューニングを行う場合は以下のコードを実行してください。
 ```
@@ -49,6 +51,7 @@ $ python PL_GNN_from_Hug.py
 ```
 #### ※注意
 ファインチューニングを行うデータセットに合わせてPL_GNN_from_Hug.py内のdata_nameやmodel_kwagsなどを適切に変更してから実行してください。
+(Ames: finetune_dim=2, task=classification, sol: finetune_dim=3, task=classification, sol_rgr: finetune_dim=1, task=regression)
 ```
 model_kwargs['finetune_dim'] = 2 
 model_kwargs['task'] = 'classification'
@@ -62,3 +65,5 @@ model_name = 'TopK'
 task = 'classification'
 model_type = 'finetune'
 ```
+modelはGCN、GIN、TopK_GCN、set2set_NMP、GraphSAGEの5種類が用意してあります。
+それらを用いる際にはmodel_nameにそれぞれ'GCN'、'GIN'、'TopK'、'set2set'、'GraphSAGE'を入力してください。

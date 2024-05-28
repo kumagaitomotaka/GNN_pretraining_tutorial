@@ -32,6 +32,7 @@ class PL_TopK_GNN(PL_TopKmodel, PyGModelHubMixin):
         model_kwargs['task'] = 'classification'
         model_kwargs['model_type'] = 'finetune'
         PL_TopKmodel.__init__(self,**model_kwargs)
+        print(model_kwargs)
         PyGModelHubMixin.__init__(self, model_name,
             dataset_name, model_kwargs)
 class PL_Set2Set_GNN(PL_Set2Setmodel, PyGModelHubMixin):
@@ -45,7 +46,7 @@ class PL_Set2Set_GNN(PL_Set2Setmodel, PyGModelHubMixin):
             dataset_name, model_kwargs)
         
 def main():
-    epochs = 300            #number of train epoch
+    epochs = 10            #number of train epoch
     batch_size = 128
     num_workers = 10                # dataloader number of workers
     valid_size = 0.1               # ratio of validation data

@@ -42,14 +42,19 @@ PL_GNN_to_Hug.py内20,21行目に自身のHugging Faceのアクセストーク�
 20 my_token = '*************************************' #自身のトークンを入力してください。
 21 repo_id = "kumatomo/TopK_GNN" #自身で作成したレポジトリのrepo_idに変更してください。
 ```
-modelはGCN、GIN、TopK_GCN、set2set_NMP、GraphSAGEの5種類が用意してあります。
-それらを用いる際にはmodel_nameにそれぞれ'GCN'、'GIN'、'TopK'、'set2set'、'GraphSAGE'を入力してください。
 ### ファインチューニング
 ファインチューニングを行う場合は以下のコードを実行してください。
 ```
 $ python PL_GNN_from_Hug.py
 ```
-#### ※注意
+#### ※注意1
+ファインチューニングを行うモデルに合わせてPL_GNN_from_Hug.py内のrepo_idを適切に変更してください。
+```
+repo_id = "kumatomo/TopK_GNN" # 自身で事前学習モデルを作成した場合は、モデルを保存したrepo_idに変更してください。
+```
+modelはGCN、GIN、TopK_GCN、set2set_NMP、GraphSAGEの5種類が用意してあります。
+それらを用いる際にはrepo_idにそれぞれ'kumatomo/BasicGCN'、'kumatomo/BasicGIN'、'kumatomo/TopK_GNN'、'kumatomo/set2set_GNN'、'kumatomo/BasicGraphSAGE'を入力してください。
+#### ※注意2
 ファインチューニングを行うデータセットに合わせてPL_GNN_from_Hug.py内のdata_nameやmodel_kwagsなどを適切に変更してから実行してください。
 (Ames: finetune_dim=2, task=classification, sol: finetune_dim=3, task=classification, sol_rgr: finetune_dim=1, task=regression)
 ```

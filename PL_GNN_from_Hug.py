@@ -17,33 +17,34 @@ repo_id = "kumatomo/TopK_GNN" # 自身で事前学習モデルを作成した場
 
 # Define your class with the mixin:
 class PL_Basic_GNN(PL_BasicGNNs, PyGModelHubMixin):
-    def __init__(self,model_name, dataset_name, model_kwargs):
+    def __init__(self, dataset_name, model_name, model_kwargs):
         #正常に読み込まれないため再定義
         model_kwargs['finetune_dim'] = 2 
         model_kwargs['task'] = 'classification'
         model_kwargs['model_type'] = 'finetune'
+        model_kwargs['model_name'] = model_name #変更しないでください。
+        model_kwargs['in_channels'] = 81 #変更しないでください。
         PL_BasicGNNs.__init__(self,**model_kwargs)
-        PyGModelHubMixin.__init__(self, model_name,
-            dataset_name, model_kwargs)
+        PyGModelHubMixin.__init__(self, model_name, dataset_name, model_kwargs)
 class PL_TopK_GNN(PL_TopKmodel, PyGModelHubMixin):
-    def __init__(self,model_name, dataset_name, model_kwargs):
+    def __init__(self, dataset_name, model_name, model_kwargs):
         #正常に読み込まれないため再定義
         model_kwargs['finetune_dim'] = 2
         model_kwargs['task'] = 'classification'
         model_kwargs['model_type'] = 'finetune'
+        model_kwargs['num_atom_features'] = 81 #変更しないでください。
         PL_TopKmodel.__init__(self,**model_kwargs)
-        print(model_kwargs)
-        PyGModelHubMixin.__init__(self, model_name,
-            dataset_name, model_kwargs)
+        PyGModelHubMixin.__init__(self, model_name, dataset_name, model_kwargs)
 class PL_Set2Set_GNN(PL_Set2Setmodel, PyGModelHubMixin):
-    def __init__(self,model_name, dataset_name, model_kwargs):
+    def __init__(self, dataset_name, model_name, model_kwargs):
         #正常に読み込まれないため再定義
         model_kwargs['finetune_dim'] = 2
         model_kwargs['task'] = 'classification'
         model_kwargs['model_type'] = 'finetune'
+        model_kwargs['num_atom_features'] = 81 #変更しないでください。
+        model_kwargs['num_bond_features'] = 4 #変更しないでください。
         PL_Set2Setmodel.__init__(self,**model_kwargs)
-        PyGModelHubMixin.__init__(self, model_name,
-            dataset_name, model_kwargs)
+        PyGModelHubMixin.__init__(self, model_name, dataset_name, model_kwargs)
         
 def main():
     epochs = 10            #number of train epoch
@@ -70,7 +71,7 @@ def main():
     if task == 'regression':
         labels = []
         for d in train_loader:
-            labels.extend(d.y)
+            labels.extend(d.y.numpy())
         mean_value = np.mean(labels)
         std_value = np.std(labels)
         print('normalizing...mean: {}, std: {}, shape: {}'.format(mean_value,std_value, len(labels)))
@@ -107,7 +108,7 @@ def main():
     else:
         raise ValueError('{} model was not supported'.format(model_name))
     #pretraine済みモデルの読み込み
-    pl_model = pl_gnn.from_pretrained(repo_id,model_name=model_name,dataset_name='QM9')
+    pl_model = pl_gnn.from_pretrained(repo_id, dataset_name='QM9', model_name=model_name)
     #平均と分散の追加
     if norm:
         pl_model.norm = True

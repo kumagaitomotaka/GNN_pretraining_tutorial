@@ -46,7 +46,7 @@ def main():
     splitting = 'random'          # data splitting (i.e., random/scaffold)
     data_name = 'QM9'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model_name= 'TopK'
+    model_name= 'GCN'
     task = 'regression'
     model_type = 'pretrain'
     finetune_dim = 0
@@ -66,8 +66,8 @@ def main():
     labels_h = []
     labels_l = []
     for d in train_loader:
-        labels_h.extend(d.h_y)
-        labels_l.extend(d.l_y)
+        labels_h.extend(d.h_y.numpy())
+        labels_l.extend(d.l_y.numpy())
     mean_value_h = np.mean(labels_h)
     mean_value_l = np.mean(labels_l)
     std_value_h = np.std(labels_h)

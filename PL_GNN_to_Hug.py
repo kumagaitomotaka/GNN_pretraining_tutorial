@@ -17,8 +17,8 @@ from torch_geometric.nn.model_hub import PyGModelHubMixin
 from callbacks.pl_callbacks import CSVLogger
 from torch_geometric.utils import scatter #デバック
 
-my_token = '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' #自身のトークンを入力してください。
-repo_id = "kumatomo/GNN_test" #自身で作成したレポジトリのrepo_idに変更してください。
+my_token = '*************************************' #自身のトークンを入力してください。
+repo_id = "kumatomo/TopK_GNN" #自身で作成したレポジトリのrepo_idに変更してください。
 
 # Define your class with the mixin:
 class PL_Basic_GNN(PL_BasicGNNs, PyGModelHubMixin):
@@ -46,7 +46,7 @@ def main():
     splitting = 'random'          # data splitting (i.e., random/scaffold)
     data_name = 'QM9'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model_name= 'GCN'
+    model_name= 'TopK'
     task = 'regression'
     model_type = 'pretrain'
     finetune_dim = 0

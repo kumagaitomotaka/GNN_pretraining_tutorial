@@ -12,7 +12,7 @@
 内容の詳細についてはのQiita記事も参考にしてください。
 
 ・[Google colablatory](https://colab.research.google.com/drive/1rUaXXIKZaG6C9NTSwlUGTwcEBSB-Q_dK?usp=sharing)
-・[Qiita記事]()
+・[Qiita記事](https://qiita.com/KUMAtomo/items/086fdd3cb21ece82dcb5)
 
 ## インストール
 ```

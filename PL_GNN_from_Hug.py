@@ -83,7 +83,7 @@ def main():
     # 保存するCSVファイルのパスとフィールド名を指定
     data_dir = 'Hug_PL_data_finetune'
     os.makedirs(data_dir, exist_ok=True)
-    log_dir = os.path.join(data_dir, 'test_QM9_'+model_name+ '_' +data_name)
+    log_dir = os.path.join(data_dir, 'QM9_'+model_name+ '_' +data_name)
     os.makedirs(log_dir, exist_ok=True)
     log_file = 'logs.csv'
     log_file_path= os.path.join(log_dir, log_file)
